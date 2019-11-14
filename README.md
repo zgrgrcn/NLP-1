@@ -1,4 +1,4 @@
-# deneme2
+# NLP-1
 NGram (1-2-3) for txt files.
 
 date:
