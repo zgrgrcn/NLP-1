@@ -15,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 
 public class Main {
   // REF:
@@ -56,18 +57,26 @@ public class Main {
           String path = "./novels/" + novelPath + ".txt";
 
           // update label and reset area and bar
-          gui.L.setText("Path: " + path + " and ngram methode:" + ngramMethode + "-" + gui.ngramMethodeAString);
+          gui.L.setText("Path: " + path + " , Ngram methode: " + ngramMethode + "-" + gui.ngramMethodeAString);
           gui.area.setText(" * * * " + novelPath + " * * * " + "\n");
           gui.num = 0;
-          gui.pb.setValue(gui.num);
-
+          
+          SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+              gui.pb.setValue(gui.num);
+            }
+          });
           String content = "";
           try {
             content = readFileAsString(path);
           } catch (IOException e1) {
             e1.printStackTrace();
           }
-
+          SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+              gui.pb.setValue(10);
+            }
+          });
           List<ngram> ngramList = new ArrayList<ngram>();
           for (String ngram : ngrams(ngramMethode, content)) {
             boolean founded = false;
@@ -77,28 +86,38 @@ public class Main {
                 founded = true;
                 s.count++;
               }
-              
             }
-            gui.pb.setValue(++gui.num);
             if (!founded)
               ngramList.add(new ngram(1, ngram));
           }
+          SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+              gui.pb.setValue(80);
+            }
+          });
           System.out.println(" ");
           ngramList.sort(Comparator.comparing(ngram::getCount));// kucukten buyuge
+          SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+              gui.pb.setValue(90);
+            }
+          });
           // REF:
           // https://stackoverflow.com/questions/2784514/sort-arraylist-of-custom-objects-by-property
           for (int i = ngramList.size() - 1; i > ngramList.size() - 35; i--) {
             ngram s = ngramList.get(i);
             System.out.println(s.ngram.replaceAll("\r\n", "") + ";" + s.count);
             gui.area.append(s.ngram.replaceAll("\r\n", "") + ";" + s.count + "\n");
-
           }
-
+          SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+              gui.pb.setValue(100);
+            }
+          });
         } else
           gui.L.setText("please select path and ngram methode" + novelPath + ngramMethode);
       }
     });
-
   }
 }
 
@@ -162,7 +181,7 @@ class GUI implements ActionListener {
     f.setLayout(null);
 
     // `Progress Bar`
-    pb = new JProgressBar(0, 1000);
+    pb = new JProgressBar(0, 100);
     pb.setValue(0);
     pb.setStringPainted(true);
     f.add(pb);
