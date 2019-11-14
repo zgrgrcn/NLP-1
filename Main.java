@@ -14,11 +14,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
-//   
-import java.awt.event.*;
-public class Main {
-  static String ngramMethode = null;
 
+public class Main {
   // REF:
   // https://github.com/hackjutsu/n-gram-demo/blob/master/src/main/java/Ngram.java
   public static List<String> ngrams(int n, String _content) {
@@ -38,7 +35,7 @@ public class Main {
     return sb.toString();
   }
 
-  //read all file and return all of as a single string
+  // read all file and return all of as a single string
   public static String readFileAsString(String fileName) throws IOException {
     String data = "";
     data = new String(Files.readAllBytes(Paths.get(fileName)), StandardCharsets.UTF_8);// for turkish letters
@@ -48,16 +45,13 @@ public class Main {
   public static void main(String[] args) throws IOException {
     GUI gui = new GUI();
     // select novel
-
+    String novelPath = gui.novelPath;
     // select Unigram-Bigrams-Trigrams from combo box
+    String ngramMethode = gui.ngramMethode;
 
-    gui.b.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        ngramMethode = (String) gui.cb.getItemAt(gui.cb.getSelectedIndex());
-        //gui.area.append(ngramMethode + gui.num + "\n");
-        //gui.pb.setValue(++gui.num);
-      }
-    });
+    if (novelPath!=null && ngramMethode!=null) {
+      
+    }
     String paths[] = { "./novels/BİLİM İŞ BAŞINDA.txt", "./novels/UNUTULMUŞ DİYARLAR.txt", "./novels/BOZKIRDA.txt",
         "./novels/DENEMELER.txt", "./novels/DEĞİŞİM.txt" };
     for (String path : paths) {// for each novel
@@ -84,7 +78,7 @@ public class Main {
         for (int i = ngrams2.size() - 1; i > ngrams2.size() - 3; i--) {
           ngram s = ngrams2.get(i);
           System.out.println(s.ngram.replaceAll("\r\n", "") + ";" + s.count);
-          gui.area.append(s.ngram.replaceAll("\r\n", "") + ";" + s.count+ "\n");
+          gui.area.append(s.ngram.replaceAll("\r\n", "") + ";" + s.count + "\n");
           gui.pb.setValue(++gui.num);
         }
       }
@@ -107,23 +101,26 @@ class ngram {
   }
 }
 
-class GUI implements ActionListener{
+class GUI implements ActionListener {
   JFrame f;
   int num = 0;
-  JButton b,b1,b2,b3,b4,b5;
+  JButton b, b1, b2, b3, b4, b5;
   JProgressBar pb;
   JTextArea area;
   JComboBox cb;
+
+  String ngramMethode = null;
+  String novelPath = null;
 
   GUI() {
     f = new JFrame();// creating instance of JFrame
 
     // files `Button`
-    b1 = new JButton("Bilim is basinda");// creating instance of JButton
-    b2 = new JButton("Unutulmus diyarlar");
-    b3 = new JButton("Bozkirda");
-    b4 = new JButton("Denemeler");
-    b5 = new JButton("Degisim");
+    b1 = new JButton("BİLİM İŞ BAŞINDA");// creating instance of JButton
+    b2 = new JButton("UNUTULMUŞ DİYARLAR");
+    b3 = new JButton("BOZKIRDA");
+    b4 = new JButton("DENEMELER");
+    b5 = new JButton("DEĞİŞİM");
     b1.setBounds(50, 50, 150, 40);// x axis, y axis, width, height
     b2.setBounds(200, 50, 150, 40);
     b3.setBounds(350, 50, 150, 40);
@@ -164,17 +161,23 @@ class GUI implements ActionListener{
     b = new JButton("Show");
     b.setBounds(200, 100, 75, 20);
     f.add(b);
+    b.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        ngramMethode = (String) cb.getItemAt(cb.getSelectedIndex());
+        // area.append(ngramMethode + num + "\n");
+        // pb.setValue(++num);
+      }
+    });
 
     f.setSize(850, 800);// 400 width and 500 height
     f.setLayout(null);// using no layout managers
     f.setVisible(true);// making the frame visible
   }
 
+  //novel selector
   public void actionPerformed(ActionEvent e) {
-    String Ngram = (String) cb.getItemAt(cb.getSelectedIndex());
-    area.append(Ngram + num + "\n");
-    area.append(e.toString()+"\n");
-    pb.setValue(++num);
+    area.append(e.getActionCommand().toString() + "\n");
+    novelPath = e.getActionCommand().toString();
   }
 
 }
