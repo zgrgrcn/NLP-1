@@ -1,3 +1,11 @@
+/**
+* n-gram algorithm (for 1,2 and 3-grams)
+* and test it on a part of Turkish Novel Corpus, which includes 5 novels.
+*
+* @author  Ozgur gurca
+* @version 1.0
+* @since   2019 Nov 14 
+*/
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
