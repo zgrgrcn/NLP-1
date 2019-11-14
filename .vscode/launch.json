@@ -6,6 +6,41 @@
   "configurations": [
     {
       "type": "java",
+      "name": "CodeLens (Launch) - SwingWorkerExample",
+      "request": "launch",
+      "mainClass": "SwingWorkerExample",
+      "projectName": "javaApp_164d1a19"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - ProgressMonitorDemo",
+      "request": "launch",
+      "mainClass": "ProgressMonitorDemo",
+      "projectName": "javaApp_164d1a19"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - ProgressBarDemo2",
+      "request": "launch",
+      "mainClass": "ProgressBarDemo2",
+      "projectName": "javaApp_164d1a19"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - AProgressBar",
+      "request": "launch",
+      "mainClass": "AProgressBar",
+      "projectName": "javaApp_164d1a19"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - SwingProgressBarExample",
+      "request": "launch",
+      "mainClass": "SwingProgressBarExample",
+      "projectName": "javaApp_164d1a19"
+    },
+    {
+      "type": "java",
       "name": "CodeLens (Launch) - deneme",
       "request": "launch",
       "mainClass": "deneme",
