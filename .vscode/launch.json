@@ -1,0 +1,42 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - deneme",
+      "request": "launch",
+      "mainClass": "deneme",
+      "projectName": "javaApp_164d1a19"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - Main2",
+      "request": "launch",
+      "mainClass": "Main2",
+      "projectName": "javaApp_164d1a19"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - Main",
+      "request": "launch",
+      "mainClass": "Main",
+      "projectName": "javaApp_164d1a19"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch) - Current File",
+      "request": "launch",
+      "mainClass": "${file}"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-app<javaApp_164d1a19>",
+      "request": "launch",
+      "mainClass": "app",
+      "projectName": "javaApp_164d1a19"
+    }
+  ]
+}
