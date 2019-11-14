@@ -8,17 +8,15 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.lang.model.util.ElementScanner6;
+//https://www.javatpoint.com/java-swing
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
 
 public class Main {
-  // REF:
   // https://github.com/hackjutsu/n-gram-demo/blob/master/src/main/java/Ngram.java
   public static List<String> ngrams(int n, String _content) {
     List<String> ngrams = new ArrayList<String>();
@@ -49,6 +47,7 @@ public class Main {
 
     gui.b.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
+        long startTime = System.currentTimeMillis();
         // select novel
         String novelPath = gui.novelPath;
         // select "Unigram", "Bigrams", "Trigrams"
@@ -57,26 +56,20 @@ public class Main {
           String path = "./novels/" + novelPath + ".txt";
 
           // update label and reset area and bar
-          gui.L.setText("Path: " + path + " , Ngram methode: " + ngramMethode + "-" + gui.ngramMethodeAString);
-          gui.area.setText(" * * * " + novelPath + " * * * " + "\n");
+          gui.l1.setText("Path: " + path + " , Ngram methode: " + ngramMethode + "-" + gui.ngramMethodeAString);
+          gui.area1.setText(" * * * " + novelPath + " * * * " + "\n");
+          gui.area2.setText(" * * * " + novelPath + " * * * " + "\n");
+          gui.area3.setText(" * * * " + novelPath + " * * * " + "\n");
+
           gui.num = 0;
-          
-          SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-              gui.pb.setValue(gui.num);
-            }
-          });
+
           String content = "";
           try {
             content = readFileAsString(path);
           } catch (IOException e1) {
             e1.printStackTrace();
           }
-          SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-              gui.pb.setValue(10);
-            }
-          });
+
           List<ngram> ngramList = new ArrayList<ngram>();
           for (String ngram : ngrams(ngramMethode, content)) {
             boolean founded = false;
@@ -90,32 +83,28 @@ public class Main {
             if (!founded)
               ngramList.add(new ngram(1, ngram));
           }
-          SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-              gui.pb.setValue(80);
-            }
-          });
-          System.out.println(" ");
+
           ngramList.sort(Comparator.comparing(ngram::getCount));// kucukten buyuge
-          SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-              gui.pb.setValue(90);
-            }
-          });
-          // REF:
           // https://stackoverflow.com/questions/2784514/sort-arraylist-of-custom-objects-by-property
-          for (int i = ngramList.size() - 1; i > ngramList.size() - 35; i--) {
+
+          for (int i = ngramList.size() - 1; i > ngramList.size() - 34; i--) {
             ngram s = ngramList.get(i);
-            System.out.println(s.ngram.replaceAll("\r\n", "") + ";" + s.count);
-            gui.area.append(s.ngram.replaceAll("\r\n", "") + ";" + s.count + "\n");
+            gui.area1.append(s.ngram.replaceAll("\r\n", "") + ";" + s.count + "\n");
           }
-          SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-              gui.pb.setValue(100);
-            }
-          });
+          for (int i = ngramList.size() - 34; i > ngramList.size() - 67; i--) {
+            ngram s = ngramList.get(i);
+            gui.area2.append(s.ngram.replaceAll("\r\n", "") + ";" + s.count + "\n");
+          }
+          for (int i = ngramList.size() - 67; i > ngramList.size() - 100; i--) {
+            ngram s = ngramList.get(i);
+            gui.area3.append(s.ngram.replaceAll("\r\n", "") + ";" + s.count + "\n");
+          }
+
+          long estimatedTime = System.currentTimeMillis() - startTime;
+          double seconds = (double) estimatedTime / 1000;
+          gui.l2.setText("Estimated time: " + seconds);
         } else
-          gui.L.setText("please select path and ngram methode" + novelPath + ngramMethode);
+          gui.l1.setText("please select path and ngram methode" + novelPath + ngramMethode);
       }
     });
   }
@@ -140,9 +129,9 @@ class GUI implements ActionListener {
   int num = 0;
   JButton b, b1, b2, b3, b4, b5;
   JProgressBar pb;
-  JTextArea area;
+  JTextArea area1, area2, area3;
   JComboBox cb;
-  JLabel L;
+  JLabel l1,l2;
 
   int ngramMethode = -1;
   String ngramMethodeAString = null;
@@ -150,6 +139,7 @@ class GUI implements ActionListener {
 
   GUI() {
     f = new JFrame();// creating instance of JFrame
+    f.setTitle("Ozgur Gurcan - 2016510032");
 
     // files `Button`
     b1 = new JButton("BİLİM İŞ BAŞINDA");// creating instance of JButton
@@ -173,29 +163,37 @@ class GUI implements ActionListener {
     b4.addActionListener(this);
     b5.addActionListener(this);
 
-    // Ngrams types `Combo box`
-    String Ngrams[] = { "Unigram", "Bigrams", "Trigrams" };
-    cb = new JComboBox(Ngrams);
-    cb.setBounds(50, 100, 150, 20);
-    f.add(cb);
-    f.setLayout(null);
-
-    // `Progress Bar`
-    pb = new JProgressBar(0, 100);
-    pb.setValue(0);
-    pb.setStringPainted(true);
-    f.add(pb);
-    pb.setBounds(350, 100, 445, 15);
+    // // `Progress Bar`
+    // pb = new JProgressBar(0, 100);
+    // pb.setValue(0);
+    // pb.setStringPainted(true);
+    // f.add(pb);
+    // pb.setBounds(350, 100, 445, 15);
 
     // `text area`
-    area = new JTextArea();
-    area.setBounds(100, 150, 500, 600);
-    f.add(area);
+    area1 = new JTextArea();
+    area2 = new JTextArea();
+    area3 = new JTextArea();
+    area1.setBounds(50, 150, 250, 600);
+    area2.setBounds(300, 150, 250, 600);
+    area3.setBounds(550, 150, 250, 600);
+    area1.setEditable(false);
+    area2.setEditable(false);
+    area3.setEditable(false);
+    f.add(area1);
+    f.add(area2);
+    f.add(area3);
 
     // show `Button`
     b = new JButton("Show");
-    b.setBounds(200, 100, 75, 20);
+    b.setBounds(200, 100, 75, 25);
     f.add(b);
+
+    // Ngrams types `Combo box`
+    String Ngrams[] = { "Unigram", "Bigrams", "Trigrams" };
+    cb = new JComboBox(Ngrams);
+    cb.setBounds(50, 100, 150, 25);
+    f.add(cb);
     cb.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         ngramMethodeAString = (String) cb.getItemAt(cb.getSelectedIndex());
@@ -207,14 +205,19 @@ class GUI implements ActionListener {
         else
           ngramMethode = 3;
         // area.append(ngramMethode + num + "\n");
-        // pb.setValue(++num);
       }
     });
 
-    // `label` for general use
-    L = new JLabel();
-    L.setBounds(100, 20, 500, 15);
-    f.add(L);
+    // `label` for novel and ngram types
+    l1 = new JLabel();
+    l1.setBounds(100, 20, 500, 15);
+    f.add(l1);
+    // `label` for estimated time
+    l2 = new JLabel();
+    l2.setBounds(350, 100, 445, 15);
+    f.add(l2);
+
+
 
     f.setSize(850, 800);// 400 width and 500 height
     f.setLayout(null);// using no layout managers
