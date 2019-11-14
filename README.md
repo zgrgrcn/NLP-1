@@ -1,5 +1,4 @@
 # NLP-1
-NGram (1-2-3) for txt files.
 
 date:
 14 Nov 2019
