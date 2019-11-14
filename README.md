@@ -34,3 +34,5 @@ General idea for ngram:
 5-if found rise count else add to list.
 6-short ngram list.
 7-show top 99 with count.
+
+![alt text](https://raw.githubusercontent.com/zgrgrcn/NLP-1/master/images/1.png)
