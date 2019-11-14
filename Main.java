@@ -1,3 +1,4 @@
+
 /**
 * n-gram algorithm (for 1,2 and 3-grams)
 * and test it on a part of Turkish Novel Corpus, which includes 5 novels.
@@ -99,7 +100,7 @@ public class Main {
           ngramList.sort(Comparator.comparing(ngram::getCount));// kucukten buyuge
           // https://stackoverflow.com/questions/2784514/sort-arraylist-of-custom-objects-by-property
 
-          // calculate probability yeni yorum
+          // calculate probability
           int total = 0;
           for (ngram ngram : ngramList) {
             total += ngram.count;
