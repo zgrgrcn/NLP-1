@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.lang.model.util.ElementScanner6;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -44,45 +45,59 @@ public class Main {
 
   public static void main(String[] args) throws IOException {
     GUI gui = new GUI();
-    // select novel
-    String novelPath = gui.novelPath;
-    // select Unigram-Bigrams-Trigrams from combo box
-    String ngramMethode = gui.ngramMethode;
 
-    if (novelPath!=null && ngramMethode!=null) {
-      
-    }
-    String paths[] = { "./novels/BİLİM İŞ BAŞINDA.txt", "./novels/UNUTULMUŞ DİYARLAR.txt", "./novels/BOZKIRDA.txt",
-        "./novels/DENEMELER.txt", "./novels/DEĞİŞİM.txt" };
-    for (String path : paths) {// for each novel
-      System.out.println(" * * * " + path.substring(9) + " * * * ");
-      String content = readFileAsString(path);
-      for (int n = 1; n <= 3; n++) {// for each n gram (1-2-3)
-        List<ngram> ngrams2 = new ArrayList<ngram>();
-        for (String ngram : ngrams(n, content)) {
-          boolean founded = false;
-          for (int k = 0; k < ngrams2.size(); k++) {
-            ngram s = ngrams2.get(k);
-            if (ngram.equals(s.ngram)) {
-              founded = true;
-              s.count++;
-            }
+    gui.b.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        // select novel
+        String novelPath = gui.novelPath;
+        // select "Unigram", "Bigrams", "Trigrams"
+        int ngramMethode = gui.ngramMethode;
+        if (novelPath != null && ngramMethode != -1) {
+          String path = "./novels/" + novelPath + ".txt";
+
+          // update label and reset area and bar
+          gui.L.setText("Path: " + path + " and ngram methode:" + ngramMethode + "-" + gui.ngramMethodeAString);
+          gui.area.setText(" * * * " + novelPath + " * * * " + "\n");
+          gui.num = 0;
+          gui.pb.setValue(gui.num);
+
+          String content = "";
+          try {
+            content = readFileAsString(path);
+          } catch (IOException e1) {
+            e1.printStackTrace();
           }
-          if (!founded)
-            ngrams2.add(new ngram(1, ngram));
-        }
-        System.out.println(" ");
-        ngrams2.sort(Comparator.comparing(ngram::getCount));// kucukten buyuge
-        // REF:
-        // https://stackoverflow.com/questions/2784514/sort-arraylist-of-custom-objects-by-property
-        for (int i = ngrams2.size() - 1; i > ngrams2.size() - 3; i--) {
-          ngram s = ngrams2.get(i);
-          System.out.println(s.ngram.replaceAll("\r\n", "") + ";" + s.count);
-          gui.area.append(s.ngram.replaceAll("\r\n", "") + ";" + s.count + "\n");
-          gui.pb.setValue(++gui.num);
-        }
+
+          List<ngram> ngramList = new ArrayList<ngram>();
+          for (String ngram : ngrams(ngramMethode, content)) {
+            boolean founded = false;
+            for (int k = 0; k < ngramList.size(); k++) {
+              ngram s = ngramList.get(k);
+              if (ngram.equals(s.ngram)) {
+                founded = true;
+                s.count++;
+              }
+              
+            }
+            gui.pb.setValue(++gui.num);
+            if (!founded)
+              ngramList.add(new ngram(1, ngram));
+          }
+          System.out.println(" ");
+          ngramList.sort(Comparator.comparing(ngram::getCount));// kucukten buyuge
+          // REF:
+          // https://stackoverflow.com/questions/2784514/sort-arraylist-of-custom-objects-by-property
+          for (int i = ngramList.size() - 1; i > ngramList.size() - 35; i--) {
+            ngram s = ngramList.get(i);
+            System.out.println(s.ngram.replaceAll("\r\n", "") + ";" + s.count);
+            gui.area.append(s.ngram.replaceAll("\r\n", "") + ";" + s.count + "\n");
+
+          }
+
+        } else
+          gui.L.setText("please select path and ngram methode" + novelPath + ngramMethode);
       }
-    }
+    });
 
   }
 }
@@ -108,8 +123,10 @@ class GUI implements ActionListener {
   JProgressBar pb;
   JTextArea area;
   JComboBox cb;
+  JLabel L;
 
-  String ngramMethode = null;
+  int ngramMethode = -1;
+  String ngramMethodeAString = null;
   String novelPath = null;
 
   GUI() {
@@ -145,8 +162,7 @@ class GUI implements ActionListener {
     f.setLayout(null);
 
     // `Progress Bar`
-    pb = new JProgressBar(0, 100);
-    pb.setBounds(40, 40, 160, 30);
+    pb = new JProgressBar(0, 1000);
     pb.setValue(0);
     pb.setStringPainted(true);
     f.add(pb);
@@ -161,22 +177,34 @@ class GUI implements ActionListener {
     b = new JButton("Show");
     b.setBounds(200, 100, 75, 20);
     f.add(b);
-    b.addActionListener(new ActionListener() {
+    cb.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        ngramMethode = (String) cb.getItemAt(cb.getSelectedIndex());
+        ngramMethodeAString = (String) cb.getItemAt(cb.getSelectedIndex());
+
+        if (ngramMethodeAString == "Unigram")
+          ngramMethode = 1;
+        else if (ngramMethodeAString == "Bigrams")
+          ngramMethode = 2;
+        else
+          ngramMethode = 3;
         // area.append(ngramMethode + num + "\n");
         // pb.setValue(++num);
       }
     });
+
+    // `label` for general use
+    L = new JLabel();
+    L.setBounds(100, 20, 500, 15);
+    f.add(L);
 
     f.setSize(850, 800);// 400 width and 500 height
     f.setLayout(null);// using no layout managers
     f.setVisible(true);// making the frame visible
   }
 
-  //novel selector
+  // novel selector
   public void actionPerformed(ActionEvent e) {
-    area.append(e.getActionCommand().toString() + "\n");
+    // area.append(e.getActionCommand().toString() + "\n");
     novelPath = e.getActionCommand().toString();
   }
 
