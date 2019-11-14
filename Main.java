@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -17,6 +19,8 @@ import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 
 public class Main {
+  static NumberFormat formatter = new DecimalFormat("#0.0000");
+
   // https://github.com/hackjutsu/n-gram-demo/blob/master/src/main/java/Ngram.java
   public static List<String> ngrams(int n, String _content) {
     List<String> ngrams = new ArrayList<String>();
@@ -87,17 +91,28 @@ public class Main {
           ngramList.sort(Comparator.comparing(ngram::getCount));// kucukten buyuge
           // https://stackoverflow.com/questions/2784514/sort-arraylist-of-custom-objects-by-property
 
+          // calculate probability
+          int total = 0;
+          for (ngram ngram : ngramList) {
+            total += ngram.count;
+          }
           for (int i = ngramList.size() - 1; i > ngramList.size() - 34; i--) {
             ngram s = ngramList.get(i);
-            gui.area1.append(s.ngram.replaceAll("\r\n", "") + ";" + s.count + "\n");
+            double probability = s.count * 1.0 / total;
+            gui.area1
+                .append(s.ngram.replaceAll("\r\n", "") + ";" + s.count + "%" + formatter.format(probability) + "\n");
           }
           for (int i = ngramList.size() - 34; i > ngramList.size() - 67; i--) {
             ngram s = ngramList.get(i);
-            gui.area2.append(s.ngram.replaceAll("\r\n", "") + ";" + s.count + "\n");
+            double probability = s.count * 1.0 / total;
+            gui.area2
+                .append(s.ngram.replaceAll("\r\n", "") + ";" + s.count + "%" + formatter.format(probability) + "\n");
           }
           for (int i = ngramList.size() - 67; i > ngramList.size() - 100; i--) {
             ngram s = ngramList.get(i);
-            gui.area3.append(s.ngram.replaceAll("\r\n", "") + ";" + s.count + "\n");
+            double probability = s.count * 1.0 / total;
+            gui.area3
+                .append(s.ngram.replaceAll("\r\n", "") + ";" + s.count + "%" + formatter.format(probability) + "\n");
           }
 
           long estimatedTime = System.currentTimeMillis() - startTime;
@@ -131,7 +146,7 @@ class GUI implements ActionListener {
   JProgressBar pb;
   JTextArea area1, area2, area3;
   JComboBox cb;
-  JLabel l1,l2;
+  JLabel l1, l2;
 
   int ngramMethode = -1;
   String ngramMethodeAString = null;
@@ -216,8 +231,6 @@ class GUI implements ActionListener {
     l2 = new JLabel();
     l2.setBounds(350, 100, 445, 15);
     f.add(l2);
-
-
 
     f.setSize(850, 800);// 400 width and 500 height
     f.setLayout(null);// using no layout managers
