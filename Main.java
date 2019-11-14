@@ -99,7 +99,7 @@ public class Main {
           ngramList.sort(Comparator.comparing(ngram::getCount));// kucukten buyuge
           // https://stackoverflow.com/questions/2784514/sort-arraylist-of-custom-objects-by-property
 
-          // calculate probability
+          // calculate probability yeni yorum
           int total = 0;
           for (ngram ngram : ngramList) {
             total += ngram.count;
