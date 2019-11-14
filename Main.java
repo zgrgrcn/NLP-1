@@ -157,7 +157,7 @@ class GUI implements ActionListener{
 
     // `text area`
     area = new JTextArea();
-    area.setBounds(100, 150, 200, 600);
+    area.setBounds(100, 150, 500, 600);
     f.add(area);
 
     // show `Button`
