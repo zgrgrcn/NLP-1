@@ -29,7 +29,7 @@ import javax.swing.JTextArea;
 
 public class Main {
   static NumberFormat formatter = new DecimalFormat("#0.0000");
-
+  //yorum 
   // https://github.com/hackjutsu/n-gram-demo/blob/master/src/main/java/Ngram.java
   public static List<String> ngrams(int n, String _content) {
     List<String> ngrams = new ArrayList<String>();
